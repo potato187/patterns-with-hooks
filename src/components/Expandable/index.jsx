@@ -6,19 +6,25 @@ import "./css/Expandable.css";
 
 export const ExpandableContext = createContext();
 
-export default function index({ children, onExpand, className = "", ...rest }) {
+export default function index({ children, className = "", shouldExpand, onExpand, ...rest }) {
 	const [expanded, setExpanded] = useState(false);
 	const toggle = useCallback(() => setExpanded((prevExpanded) => !prevExpanded), []);
-	const componentJustMounted = useRef(true);
-	const combinedClassName = ["Expandable", className].join("");
 
-	const value = useMemo(() => ({ expanded, toggle }), [expanded, toggle]);
+	const componentJustMounted = useRef(true);
+	const isExpandControlled = shouldExpand !== undefined;
+
+	const getToggle = isExpandControlled ? onExpand : toggle;
+	const getState = isExpandControlled ? shouldExpand : expanded;
+
+	const combinedClassName = ["Expandable", className].join("");
+	const value = useMemo(() => ({ expanded: getState, toggle: getToggle }), [getState, getToggle]);
+
 	useEffect(() => {
-		if (!componentJustMounted && onExpand) {
+		if (!componentJustMounted && !isExpandControlled) {
 			onExpand(expanded);
+			componentJustMounted.current = false;
 		}
-		componentJustMounted.current = false;
-	}, [expanded]);
+	}, [expanded, onExpand, isExpandControlled]);
 
 	return (
 		<ExpandableContext.Provider value={value}>
