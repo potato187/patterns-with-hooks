@@ -4,17 +4,20 @@ import useEffectAfterMounted from "./hooks/useEffectAfterMounted";
 import useExpand from "./hooks/useExpand";
 
 function App() {
-	const { expand, toggle } = useExpand();
+	const { expanded, togglerProps } = useExpand();
 
 	useEffectAfterMounted(() => {
 		console.log("Button was clicked!");
-	}, [expand]);
+	}, [expanded]);
 
 	return (
 		<div className='App'>
 			<ExpandMultiple />
-			<button onClick={toggle}>Expand</button>
-			{expand && <div>Hello world</div>}
+			<button {...togglerProps}>Click to view awesomeness...</button>
+			// user 2.
+			<div {...togglerProps}>Burn the place down 🔥</div>
+			// user 3.
+			<img {...togglerProps} alt='first image in carousel' />
 		</div>
 	);
 }

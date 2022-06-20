@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo, useState } from "react";
 
 function useExpand() {
-	const [expand, setExpand] = useState(false);
-	const toggle = useCallback(() => setExpand((prevState) => !prevState), []);
-	const value = useMemo(() => ({ expand, toggle }), [expand, toggle]);
-
+	const [expanded, setExpanded] = useState(false);
+	const toggle = useCallback(() => setExpanded((prevState) => !prevState), []);
+	const togglerProps = useMemo(() => ({ onClick: toggle, "aria-expanded": expanded }), [toggle, expanded]);
+	const value = useMemo(() => ({ expanded, toggle, togglerProps }), [expanded, toggle, togglerProps]);
 	return value;
 }
 
